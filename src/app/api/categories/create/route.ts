@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 
+import { authOptions } from "@/lib/auth";
 import { Category } from "@/lib/db/models";
 import { connectToMongoDB } from "@/lib/db/mongodb";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function POST(req: NextRequest) {
   try {

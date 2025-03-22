@@ -6,13 +6,7 @@ import { redirect, notFound } from "next/navigation";
 import { Ad } from "@/lib/db/models";
 import { connectToMongoDB } from "@/lib/db/mongodb";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
-interface AdDetailPageProps {
-  params: {
-    id: string;
-  };
-}
+import { authOptions } from "@/lib/auth";
 
 async function getAd(id: string) {
   try {
@@ -35,8 +29,12 @@ async function getAd(id: string) {
   }
 }
 
-export default async function AdDetailPage({ params }: AdDetailPageProps) {
-  const { id } = params;
+export default async function AdDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   const ad = await getAd(id);
 

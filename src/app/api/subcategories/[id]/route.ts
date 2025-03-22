@@ -1,13 +1,13 @@
 import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 
+import { authOptions } from "@/lib/auth";
 import { Subcategory } from "@/lib/db/models";
 import { connectToMongoDB } from "@/lib/db/mongodb";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,7 +18,8 @@ export async function PUT(
 
     await connectToMongoDB();
 
-    const subcategoryId = params.id;
+    const { id } = await context.params;
+    const subcategoryId = id;
     const { name } = await req.json();
 
     if (!name) {
@@ -69,7 +70,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -80,7 +81,8 @@ export async function DELETE(
 
     await connectToMongoDB();
 
-    const subcategoryId = params.id;
+    const { id } = await context.params;
+    const subcategoryId = id;
 
     const subcategory = await Subcategory.findById(subcategoryId);
     if (!subcategory) {

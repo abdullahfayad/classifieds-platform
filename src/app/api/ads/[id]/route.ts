@@ -3,15 +3,15 @@ import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 
 import { Ad } from "@/lib/db/models";
+import { authOptions } from "@/lib/auth";
 import { connectToMongoDB } from "@/lib/db/mongodb";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = params.id;
+    const { id } = await context.params;
     await connectToMongoDB();
 
     const ad = await Ad.findById(id)
@@ -35,11 +35,11 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
-    const id = params.id;
+    const { id } = await context.params;
 
     if (!session?.user) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

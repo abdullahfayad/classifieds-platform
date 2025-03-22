@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth/next";
 
+import { authOptions } from "@/lib/auth";
 import AdCard from "@/components/ads/AdCard";
 import SearchBar from "@/components/ads/SearchBar";
 import CategoryFilter from "@/components/ads/CategoryFilter";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import MobileFilterButton from "@/components/ads/MobileFilterButton";
 
 import { connectToMongoDB } from "@/lib/db/mongodb";
@@ -62,23 +62,20 @@ async function getCategories() {
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { category?: string; subcategory?: string; search?: string };
+  searchParams: Promise<{
+    category?: string;
+    subcategory?: string;
+    search?: string;
+  }>;
 }) {
   const session = await getServerSession(authOptions);
   const isUser = session?.user?.role === "user";
 
-  const categoryId =
-    typeof searchParams?.category === "string"
-      ? searchParams.category
-      : undefined;
+  const params = await searchParams;
 
-  const subcategoryId =
-    typeof searchParams?.subcategory === "string"
-      ? searchParams.subcategory
-      : undefined;
-
-  const searchQuery =
-    typeof searchParams?.search === "string" ? searchParams.search : undefined;
+  const searchQuery = params.search || undefined;
+  const categoryId = params.category || undefined;
+  const subcategoryId = params.subcategory || undefined;
 
   const [ads, categories] = await Promise.all([
     getAds(categoryId, subcategoryId, searchQuery),
