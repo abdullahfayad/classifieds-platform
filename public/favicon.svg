@@ -1,0 +1,23 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 9 13"
+    width="50" height="72.22">
+    <script xmlns="" src="chrome-extension://mfidniedemcgceagapgdekdbmanojomk/js/elephant.js" />
+    <path fill="#000" fill-rule="evenodd"
+        d="M8.39 9.588c-.047-1.205-.431-1.302-.877-2.372-.631-1.72.446-3.19-.75-5.016-.368 2.328-2.099 3.004-3.358 4.496-.985 1.166-1.25 2.669-.774 3.723a2.306 2.306 0 0 1 2.175-1.555 2.306 2.306 0 0 1 1.921 3.575c1.097-.395 1.708-1.697 1.663-2.85z"
+        clip-rule="evenodd" />
+    <path fill="#000" fill-rule="evenodd"
+        d="M3.906 5.203c.844-.703 2.148-2.006 2.148-3C6.054.69 5.246 0 5.246 0s.351 1.194-2.397 3.73C.482 5.912.816 7.902.824 8.03c.076 1.223.579 2.641 1.468 3.234a3.575 3.575 0 0 1-.575-1.857c0-.202-.178-2.224 2.188-4.205M6.412 11.17c0 .89-.72 1.612-1.606 1.612A1.609 1.609 0 0 1 3.2 11.17c0-.888.718-1.61 1.606-1.61.886 0 1.606.722 1.606 1.61z"
+        clip-rule="evenodd" />
+    <style xmlns="" class="darkreader darkreader--fallback">
+        html,
+        body,
+        body :not(iframe) {
+            background-color: var(--darkreader-background-ffffff, #181a1b) !important;
+            border-color: var(--darkreader-border-404040, #776e62) !important;
+            color: var(--darkreader-text-000000, #e8e6e3) !important;
+        }
+
+        div[style*="background-color: rgb(135, 135, 135)"] {
+            background-color: #878787 !important;
+        }
+    </style>
+</svg>
