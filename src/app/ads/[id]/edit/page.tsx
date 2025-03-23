@@ -424,7 +424,7 @@ export default function EditAdPage() {
                     <button
                       type="button"
                       onClick={() => removeExistingImage(index)}
-                      className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 md:opacity-0 opacity-90 md:group-hover:opacity-100 transition-opacity shadow-md"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -506,7 +506,7 @@ export default function EditAdPage() {
                     <button
                       type="button"
                       onClick={() => removeNewImage(index)}
-                      className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 md:opacity-0 opacity-90 md:group-hover:opacity-100 transition-opacity shadow-md"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
