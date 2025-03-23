@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import AdCard from "@/components/ads/AdCard";
 import SearchBar from "@/components/ads/SearchBar";
+import Pagination from "@/components/ui/Pagination";
 import CategoryFilter from "@/components/ads/CategoryFilter";
 import MobileFilterButton from "@/components/ads/MobileFilterButton";
 
@@ -13,7 +14,9 @@ import { Ad, Category, IAd } from "@/lib/db/models";
 async function getAds(
   categoryId?: string,
   subcategoryId?: string,
-  searchQuery?: string
+  searchQuery?: string,
+  page: number = 1,
+  limit: number = 9
 ) {
   await connectToMongoDB();
 
@@ -42,15 +45,23 @@ async function getAds(
     ];
   }
 
+  const skip = (page - 1) * limit;
+  const totalCount = await Ad.countDocuments(query);
+
   const ads = await Ad.find(query)
     .populate("category")
     .populate("subcategory")
     .populate("user", "name")
     .sort({ createdAt: -1 })
-    .limit(20)
+    .skip(skip)
+    .limit(limit)
     .lean();
 
-  return JSON.parse(JSON.stringify(ads));
+  return {
+    ads: JSON.parse(JSON.stringify(ads)),
+    totalCount,
+    totalPages: Math.ceil(totalCount / limit),
+  };
 }
 
 async function getCategories() {
@@ -66,6 +77,7 @@ export default async function Home({
     category?: string;
     subcategory?: string;
     search?: string;
+    page?: string;
   }>;
 }) {
   const session = await getServerSession(authOptions);
@@ -76,12 +88,14 @@ export default async function Home({
   const searchQuery = params.search || undefined;
   const categoryId = params.category || undefined;
   const subcategoryId = params.subcategory || undefined;
+  const currentPage = params.page ? parseInt(params.page, 10) : 1;
 
-  const [ads, categories] = await Promise.all([
-    getAds(categoryId, subcategoryId, searchQuery),
+  const [adsData, categories] = await Promise.all([
+    getAds(categoryId, subcategoryId, searchQuery, currentPage),
     getCategories(),
   ]);
 
+  const { ads, totalCount, totalPages } = adsData;
   const isSearching = !!searchQuery;
 
   return (
@@ -204,7 +218,7 @@ export default async function Home({
             <>
               {isSearching && (
                 <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                  Found {ads.length} result{ads.length !== 1 ? "s" : ""} for
+                  Found {totalCount} result{totalCount !== 1 ? "s" : ""} for
                   &quot;{searchQuery}&quot;
                 </div>
               )}
@@ -222,6 +236,20 @@ export default async function Home({
                   )
                 )}
               </div>
+
+              {totalPages > 1 && (
+                <div className="mt-8">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    baseUrl={`/?${new URLSearchParams({
+                      ...(searchQuery ? { search: searchQuery } : {}),
+                      ...(categoryId ? { category: categoryId } : {}),
+                      ...(subcategoryId ? { subcategory: subcategoryId } : {}),
+                    }).toString()}`}
+                  />
+                </div>
+              )}
             </>
           )}
         </div>
